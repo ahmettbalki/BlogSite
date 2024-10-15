@@ -4,6 +4,7 @@ using BlogSite.Models.Dtos.Post.Requests;
 using BlogSite.Models.Dtos.Post.Responses;
 using BlogSite.Models.Entities;
 using BlogSite.Service.Abstracts;
+using Core.Responses;
 namespace BlogSite.Service.Concretes;
 public class PostService : IPostService
 {
@@ -14,18 +15,45 @@ public class PostService : IPostService
         _postRepository = postRepository;
         _mapper = mapper;
     }
-    public Post Add(CreatePostRequest create)
+    public ReturnModel<PostResponseDto> Add(CreatePostRequest create)
     {
-        Post post = _mapper.Map<Post>(create);
-        Post createdPost = _postRepository.Add(post);
-        return createdPost;
+        Post createdPost = _mapper.Map<Post>(create);
+        createdPost.Id = Guid.NewGuid();
+
+        _postRepository.Add(createdPost);
+
+        PostResponseDto response = _mapper.Map<PostResponseDto>(createdPost);
+
+        return new ReturnModel<PostResponseDto>
+        {
+            Data = response,
+            Message = "Post Eklendi.",
+            StatusCode = 200,
+            Success = true
+        };
     }
-    public List<PostResponseDto> GetAll()
+    public ReturnModel<List<PostResponseDto>> GetAll()
     {
-        throw new NotImplementedException();
+        List<Post> posts = _postRepository.GetAll();
+        List<PostResponseDto> responses = _mapper.Map<List<PostResponseDto>>(posts);
+        return new ReturnModel<List<PostResponseDto>>
+        {
+            Data = responses,
+            Message = string.Empty,
+            StatusCode = 200,
+            Success = true
+        };
     }
-    public PostResponseDto? GetById(Guid id)
+    public ReturnModel<PostResponseDto?> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        var post = _postRepository.GetById(id);
+        var response = _mapper.Map<PostResponseDto?>(post);
+        return new ReturnModel<PostResponseDto?>
+        {
+            Data = response,
+            Message = string.Empty,
+            StatusCode = 200,
+            Success = true
+        };
     }
 }
