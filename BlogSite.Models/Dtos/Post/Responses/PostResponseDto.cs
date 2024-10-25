@@ -1,6 +1,12 @@
-﻿namespace BlogSite.Models.Dtos.Post.Responses;
-public sealed record PostResponseDto(
-    Guid Id,
-    string Title,
-    string Content,
-    DateTime CreatedDate);
+﻿using BlogSite.Models.Entities;
+
+namespace BlogSite.Models.Dtos.Category.Responses;
+public sealed record PostResponseDto
+{
+    public Guid Id { get; init; }
+    public string Title { get; init; }
+    public string Content { get; init; }
+    public DateTime CreatedDate { get; init; }
+    public string UserName { get; init; }
+    public string Category { get; init; }
+}

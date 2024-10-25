@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BlogSite.DataAccess.Abstracts;
-using BlogSite.Models.Dtos.Post.Requests;
-using BlogSite.Models.Dtos.Post.Responses;
+using BlogSite.Models.Dtos.Category.Requests;
+using BlogSite.Models.Dtos.Category.Responses;
 using BlogSite.Models.Entities;
 using BlogSite.Service.Abstracts;
 using Core.Responses;
@@ -32,6 +32,11 @@ public class PostService : IPostService
             Success = true
         };
     }
+    public ReturnModel<PostResponseDto> Remove(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
     public ReturnModel<List<PostResponseDto>> GetAll()
     {
         List<Post> posts = _postRepository.GetAll();
@@ -55,5 +60,10 @@ public class PostService : IPostService
             StatusCode = 200,
             Success = true
         };
+    }
+
+    public ReturnModel<PostResponseDto> Update(UpdatePostRequest update)
+    {
+        throw new NotImplementedException();
     }
 }

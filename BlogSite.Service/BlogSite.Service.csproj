@@ -14,4 +14,11 @@
     <ProjectReference Include="..\BlogSite.DataAccess\BlogSite.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Profiles\Categories\" />
+    <Folder Include="Profiles\Comments\" />
+    <Folder Include="Profiles\Posts\" />
+    <Folder Include="Profiles\Users\" />
+  </ItemGroup>
+
 </Project>
