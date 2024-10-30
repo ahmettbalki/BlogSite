@@ -15,15 +15,13 @@ public class PostService : IPostService
         _postRepository = postRepository;
         _mapper = mapper;
     }
-    public ReturnModel<PostResponseDto> Add(CreatePostRequest create)
+    public ReturnModel<PostResponseDto> Add(CreatePostRequest create, string userId)
     {
         Post createdPost = _mapper.Map<Post>(create);
         createdPost.Id = Guid.NewGuid();
-
+        createdPost.AuthorId = userId;
         _postRepository.Add(createdPost);
-
         PostResponseDto response = _mapper.Map<PostResponseDto>(createdPost);
-
         return new ReturnModel<PostResponseDto>
         {
             Data = response,
@@ -32,11 +30,6 @@ public class PostService : IPostService
             Success = true
         };
     }
-    public ReturnModel<PostResponseDto> Remove(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
     public ReturnModel<List<PostResponseDto>> GetAll()
     {
         List<Post> posts = _postRepository.GetAll();
@@ -49,10 +42,27 @@ public class PostService : IPostService
             Success = true
         };
     }
+    public ReturnModel<List<PostResponseDto>> GetAllByAuthorId(string id)
+    {
+        var posts = _postRepository.GetAll(x => x.AuthorId == id, false);
+        var responses = _mapper.Map<List<PostResponseDto>>(posts);
+
+        return new ReturnModel<List<PostResponseDto>>
+        {
+            Data = responses,
+            StatusCode = 200,
+            Success = true
+        };
+
+    }
+    public ReturnModel<List<PostResponseDto>> GetAllByCategoryId(int id)
+    {
+        throw new NotImplementedException();
+    }
     public ReturnModel<PostResponseDto?> GetById(Guid id)
     {
         var post = _postRepository.GetById(id);
-        var response = _mapper.Map<PostResponseDto?>(post);
+        var response = _mapper.Map<PostResponseDto>(post);
         return new ReturnModel<PostResponseDto?>
         {
             Data = response,
@@ -61,9 +71,38 @@ public class PostService : IPostService
             Success = true
         };
     }
-
-    public ReturnModel<PostResponseDto> Update(UpdatePostRequest update)
+    public ReturnModel<PostResponseDto> Remove(Guid id)
     {
-        throw new NotImplementedException();
+        Post post = _postRepository.GetById(id);
+        Post deletedPost = _postRepository.Remove(post);
+        PostResponseDto response = _mapper.Map<PostResponseDto>(deletedPost);
+        return new ReturnModel<PostResponseDto>
+        {
+            Data = response,
+            Message = "Post Silindi.",
+            StatusCode = 200,
+            Success = true
+        };
+    }
+    public ReturnModel<PostResponseDto> Update(UpdatePostRequest updatePost)
+    {
+        Post post = _postRepository.GetById(updatePost.Id);
+        Post update = new Post
+        {
+            CategoryId = post.CategoryId,
+            Content = updatePost.Content,
+            Title = updatePost.Title,
+            AuthorId = post.AuthorId,
+            CreatedDate = post.CreatedDate,
+        };
+        Post updatedPost = _postRepository.Update(update);
+        PostResponseDto dto = _mapper.Map<PostResponseDto>(updatedPost);
+        return new ReturnModel<PostResponseDto>
+        {
+            Data = dto,
+            Message = "Post güncellendi",
+            StatusCode = 200,
+            Success = true
+        };
     }
 }

@@ -3,5 +3,5 @@ using BlogSite.Models.Entities;
 namespace BlogSite.Service.Abstracts;
 public interface IJwtService
 {
-    TokenResponseDto CreateJwtToken(User user);
+    Task<TokenResponseDto> CreateJwtTokenAsync(User user);
 }

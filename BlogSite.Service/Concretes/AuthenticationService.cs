@@ -8,23 +8,26 @@ public class AuthenticationService(IUserService userService, IJwtService jwtServ
     public async Task<ReturnModel<TokenResponseDto>> LoginAsync(LoginRequestDto dto)
     {
         var user = await userService.LoginAsync(dto);
-        var tokenResponse = jwtService.CreateJwtToken(user);
+        var tokenResponse = await jwtService.CreateJwtTokenAsync(user);
+
         return new ReturnModel<TokenResponseDto>
         {
             Data = tokenResponse,
-            Message = "Giriş başarılı",
+            Message = "Giriş Başarılı",
             StatusCode = 200,
             Success = true
         };
     }
+
     public async Task<ReturnModel<TokenResponseDto>> RegisterAsync(RegisterRequestDto dto)
     {
         var user = await userService.RegisterAsync(dto);
-        var tokenResponse = jwtService.CreateJwtToken(user);
+        var tokenResponse = await jwtService.CreateJwtTokenAsync(user);
+
         return new ReturnModel<TokenResponseDto>
         {
             Data = tokenResponse,
-            Message = "Kayıt başarılı",
+            Message = "Kayıt işlemi Başarılı",
             StatusCode = 200,
             Success = true
         };
